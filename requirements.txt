@@ -1,0 +1,13 @@
+bingbong
+sseclient-py
+chromadb
+pydantic-settings
+google-generativeai
+pypdf2
+PyMuPDF
+gradio
+requests
+toml
+datasets
+flatdict
+APScheduler
