@@ -2,7 +2,7 @@ bingbong
 sseclient-py
 chromadb
 pydantic-settings
-google-generativeai
+git+https://github.com/deep-diver/generative-ai-python.git
 pypdf2
 PyMuPDF
 gradio
