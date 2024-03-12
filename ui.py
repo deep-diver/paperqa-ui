@@ -22,6 +22,7 @@ from init import (
     gemini_api_key
 )
 from utils import push_to_hf_hub
+gemini_init(gemini_api_key)
 
 def get_paper_by_year(year):
     months = sorted(date_dict[year].keys())
@@ -236,7 +237,6 @@ async def chat_stream(idx, local_data, user_prompt, chat_state, ctx_num_lconv=3)
         )
     )
     prompt = _build_prompts(ppm, DEFAULT_GLOBAL_CTX % paper["full_text"].replace("\n", " ")[:30000], ctx_num_lconv)
-    print(prompt)
 
     # async for result in open_llm_gen_text(
     #     prompt, 
@@ -250,12 +250,16 @@ async def chat_stream(idx, local_data, user_prompt, chat_state, ctx_num_lconv=3)
     #         'repetition_penalty': 1.2
     #     }
     # ):
-    gemini_init(gemini_api_key)
-    async for result in gemini_gen_text(prompt):
-        ppm.append_pong(result)
-        yield "", ppm.build_uis(), str(ppm), gr.update(interactive=False), gr.update(interactive=False), gr.update(interactive=False)
+    try:
+        async for result in gemini_gen_text(prompt):
+            ppm.append_pong(result)
+            yield "", ppm.build_uis(), str(ppm), gr.update(interactive=False), gr.update(interactive=False), gr.update(interactive=False)
 
-    yield "", ppm.build_uis(), str(ppm), gr.update(interactive=True), gr.update(interactive=True), gr.update(interactive=True)
+        yield "", ppm.build_uis(), str(ppm), gr.update(interactive=True), gr.update(interactive=True), gr.update(interactive=True)
+    except Exception as e:
+        gr.Warning(str(e))
+        ppm.replace_last_pong("Gemini refused to answer. This happens becase there were some safety issues in the answer.")
+        yield "", ppm.build_uis(), str(ppm), gr.update(interactive=True), gr.update(interactive=True), gr.update(interactive=True)        
 
 def chat_reset(local_data, chat_state):
     ppm = chat_state["ppmanager_type"].from_json(json.dumps(local_data))
