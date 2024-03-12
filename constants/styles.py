@@ -9,7 +9,8 @@ STYLE = """
 
 .small-font{
   font-size: 12pt !important;
-  transition: font-size 0.3s ease-out;
+  transition: font-size 0.4s ease-out; 
+  transition-delay: 0.8s;
 }
 
 .small-font:hover {
