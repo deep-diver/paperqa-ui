@@ -166,7 +166,8 @@ with gr.Blocks(css=STYLE, theme=gr.themes.Soft()) as demo:
         arxiv_id_enter.submit(
             add_arxiv_ids_to_queue,
             [arxiv_queue, arxiv_id_enter],
-            [arxiv_queue, arxiv_id_enter]
+            [arxiv_queue, arxiv_id_enter],
+            concurrency_limit=20,
         )
 
 
@@ -178,61 +179,71 @@ with gr.Blocks(css=STYLE, theme=gr.themes.Soft()) as demo:
     search_r1.click(set_date, search_r1, [year_dd, month_dd, day_dd]).then(
         set_papers,
         inputs=[year_dd, month_dd, day_dd, search_r1],
-        outputs=[cur_arxiv_id, papers_dd, search_in]
+        outputs=[cur_arxiv_id, papers_dd, search_in],
+        concurrency_limit=20,
     )
 
     search_r2.click(set_date, search_r2, [year_dd, month_dd, day_dd]).then(
         set_papers,
         inputs=[year_dd, month_dd, day_dd, search_r2],
-        outputs=[cur_arxiv_id, papers_dd, search_in]
+        outputs=[cur_arxiv_id, papers_dd, search_in],
+        concurrency_limit=20,
     )
 
     search_r3.click(set_date, search_r3, [year_dd, month_dd, day_dd]).then(
         set_papers,
         inputs=[year_dd, month_dd, day_dd, search_r3],
-        outputs=[cur_arxiv_id, papers_dd, search_in]
+        outputs=[cur_arxiv_id, papers_dd, search_in],
+        concurrency_limit=20,
     )
 
     search_r4.click(set_date, search_r4, [year_dd, month_dd, day_dd]).then(
         set_papers,
         inputs=[year_dd, month_dd, day_dd, search_r4],
-        outputs=[cur_arxiv_id, papers_dd, search_in]
+        outputs=[cur_arxiv_id, papers_dd, search_in],
+        concurrency_limit=20,
     )
 
     search_r5.click(set_date, search_r5, [year_dd, month_dd, day_dd]).then(
         set_papers,
         inputs=[year_dd, month_dd, day_dd, search_r5],
-        outputs=[cur_arxiv_id, papers_dd, search_in]
+        outputs=[cur_arxiv_id, papers_dd, search_in],
+        concurrency_limit=20,
     )
 
     search_r6.click(set_date, search_r6, [year_dd, month_dd, day_dd]).then(
         set_papers,
         inputs=[year_dd, month_dd, day_dd, search_r6],
-        outputs=[cur_arxiv_id, papers_dd, search_in]
+        outputs=[cur_arxiv_id, papers_dd, search_in],
+        concurrency_limit=20,
     )
 
     search_r7.click(set_date, search_r7, [year_dd, month_dd, day_dd]).then(
         set_papers,
         inputs=[year_dd, month_dd, day_dd, search_r7],
-        outputs=[cur_arxiv_id, papers_dd, search_in]
+        outputs=[cur_arxiv_id, papers_dd, search_in],
+        concurrency_limit=20,
     )    
 
     search_r8.click(set_date, search_r8, [year_dd, month_dd, day_dd]).then(
         set_papers,
         inputs=[year_dd, month_dd, day_dd, search_r8],
-        outputs=[cur_arxiv_id, papers_dd, search_in]
+        outputs=[cur_arxiv_id, papers_dd, search_in],
+        concurrency_limit=20,
     )
 
     search_r9.click(set_date, search_r9, [year_dd, month_dd, day_dd]).then(
         set_papers,
         inputs=[year_dd, month_dd, day_dd, search_r9],
-        outputs=[cur_arxiv_id, papers_dd, search_in]
+        outputs=[cur_arxiv_id, papers_dd, search_in],
+        concurrency_limit=20,
     )
 
     search_r10.click(set_date, search_r10, [year_dd, month_dd, day_dd]).then(
         set_papers,
         inputs=[year_dd, month_dd, day_dd, search_r10],
-        outputs=[cur_arxiv_id, papers_dd, search_in]
+        outputs=[cur_arxiv_id, papers_dd, search_in],
+        concurrency_limit=20,
     )
 
     year_dd.input(get_paper_by_year, inputs=[year_dd], outputs=[month_dd, day_dd, papers_dd]).then(
@@ -251,7 +262,8 @@ with gr.Blocks(css=STYLE, theme=gr.themes.Soft()) as demo:
             basic_q_2, basic_q_eli5_2, basic_q_expert_2,
             depth_q_2, depth_q_eli5_2, depth_q_expert_2,
             breath_q_2, breath_q_eli5_2, breath_q_expert_2
-        ]        
+        ],
+        concurrency_limit=20,
     )
 
     month_dd.input(get_paper_by_month, inputs=[year_dd, month_dd], outputs=[day_dd, papers_dd]).then(
@@ -270,7 +282,8 @@ with gr.Blocks(css=STYLE, theme=gr.themes.Soft()) as demo:
             basic_q_2, basic_q_eli5_2, basic_q_expert_2,
             depth_q_2, depth_q_eli5_2, depth_q_expert_2,
             breath_q_2, breath_q_eli5_2, breath_q_expert_2
-        ]        
+        ],
+        concurrency_limit=20, 
     )
 
     day_dd.input(get_paper_by_day, inputs=[year_dd, month_dd, day_dd], outputs=[papers_dd]).then(
@@ -289,7 +302,8 @@ with gr.Blocks(css=STYLE, theme=gr.themes.Soft()) as demo:
             basic_q_2, basic_q_eli5_2, basic_q_expert_2,
             depth_q_2, depth_q_eli5_2, depth_q_expert_2,
             breath_q_2, breath_q_eli5_2, breath_q_expert_2
-        ]        
+        ],
+        concurrency_limit=20,
     )
 
     papers_dd.change(set_paper, [year_dd, month_dd, day_dd, papers_dd],
@@ -307,7 +321,8 @@ with gr.Blocks(css=STYLE, theme=gr.themes.Soft()) as demo:
             basic_q_2, basic_q_eli5_2, basic_q_expert_2,
             depth_q_2, depth_q_eli5_2, depth_q_expert_2,
             breath_q_2, breath_q_eli5_2, breath_q_expert_2
-        ]
+        ],
+        concurrency_limit=20,
     )
 
     search_in.change(
@@ -327,29 +342,34 @@ with gr.Blocks(css=STYLE, theme=gr.themes.Soft()) as demo:
             basic_q_eli5_0, basic_q_expert_0, depth_q_eli5_0, depth_q_expert_0, breath_q_eli5_0, breath_q_expert_0,
             basic_q_eli5_1, basic_q_expert_1, depth_q_eli5_1, depth_q_expert_1, breath_q_eli5_1, breath_q_expert_1,
             basic_q_eli5_2, basic_q_expert_2, depth_q_eli5_2, depth_q_expert_2, breath_q_eli5_2, breath_q_expert_2
-        ]
+        ],
+        concurrency_limit=20,
     )
     
     chat_button.click(None, [cur_arxiv_id], [local_data, chatbot], js=OPEN_CHAT_IF)
     close.click(None, None, None,js=CLOSE_CHAT_IF) 
 
     prompt_txtbox.submit(
-        before_chat_begin, None, [close, reset, regen]
+        before_chat_begin, None, [close, reset, regen],
+        concurrency_limit=20,
     ).then(
         chat_stream, 
         [cur_arxiv_id, local_data, prompt_txtbox, chat_state],
-        [prompt_txtbox, chatbot, local_data, close, reset, regen]
+        [prompt_txtbox, chatbot, local_data, close, reset, regen],
+        concurrency_limit=20,
     ).then(
         None, [cur_arxiv_id, local_data], None, 
         js=UPDATE_CHAT_HISTORY
     )
 
     reset.click(
-        before_chat_begin, None, [close, reset, regen]
+        before_chat_begin, None, [close, reset, regen],
+        concurrency_limit=20,
     ).then(
         chat_reset,
         [local_data, chat_state],
-        [prompt_txtbox, chatbot, local_data, close, reset, regen]
+        [prompt_txtbox, chatbot, local_data, close, reset, regen],
+        concurrency_limit=20,
     ).then(
         None, [cur_arxiv_id, local_data], None, 
         js=UPDATE_CHAT_HISTORY
@@ -375,4 +395,9 @@ scheduler.add_job(
 )
 scheduler.start()
 
-demo.launch(share=True, debug=True)
+demo.queue(
+    default_concurrency_limit=20,
+    max_size=256
+).launch(
+    share=True, debug=True
+)
