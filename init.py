@@ -57,7 +57,7 @@ def _initialize_paper_info(source_ds):
             arxivid2data[paper['arxiv_id']] = {"idx": count, "paper": paper}
             date_dict[year][month][day].append(paper)
 
-    titles = title2qna.keys()
+    titles = [f"[{v['arxiv_id']}] {k}" for k, v in title2qna.items()]
 
     return titles, date_dict, arxivid2data
 

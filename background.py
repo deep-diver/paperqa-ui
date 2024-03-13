@@ -18,6 +18,17 @@ def _filter_function(example, ids):
     print(example)
     return example
 
+def _extract_arxiv_id(text):
+    print(text)
+    start = text.find("[") + 1
+    end = text.find("]")
+
+    # Extract the text between brackets
+    if start != -1 and end != -1:
+        return text[start:end]
+    else:
+        return text
+
 def process_arxiv_ids(gemini_api, hf_repo_id, req_hf_repo_id, hf_token, restart_repo_id, how_many=10):
     arxiv_ids = []
 
@@ -25,7 +36,7 @@ def process_arxiv_ids(gemini_api, hf_repo_id, req_hf_repo_id, hf_token, restart_
     for d in ds1['train']:
         req_arxiv_ids = d['Requested arXiv IDs']
         if len(req_arxiv_ids) > 0 and req_arxiv_ids[0] != "top":
-            arxiv_ids = arxiv_ids + req_arxiv_ids
+            arxiv_ids = arxiv_ids + [_extract_arxiv_id(req_arxiv_ids[0])]
 
     arxiv_ids = arxiv_ids[:how_many]
 
@@ -77,7 +88,7 @@ def process_arxiv_ids(gemini_api, hf_repo_id, req_hf_repo_id, hf_token, restart_
 
                 print(f"......Updating request arXiv HF Dataset repo at [{req_hf_repo_id}]")
                 ds1 = ds1['train'].map(
-                    lambda example: _filter_function(example, [arxiv_id])
+                    lambda example: _filter_function(example, [f"[{arxiv_id}] {title}"])
                 ).filter(
                     lambda example: len(example['Requested arXiv IDs']) > 0
                 )

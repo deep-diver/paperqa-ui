@@ -13,6 +13,8 @@ from gen.gemini_chat import gen_text as gemini_gen_text
 from gen.gemini_chat import init as gemini_init
 from constants.context import DEFAULT_GLOBAL_CTX
 
+from paper.download import get_papers_from_arxiv_ids
+
 from init import (
     requested_arxiv_ids_df,
     date_dict,
@@ -60,7 +62,10 @@ def get_paper_by_day(year, month, day):
     ))
     return gr.Dropdown(choices=papers, value=papers[0])
 
+# 2307.02040
 def set_papers(year, month, day, title):
+    title = title.split("]")[1].strip()
+
     papers = []
     for paper in date_dict[year][month][day]:
         papers.append(paper["title"])
@@ -82,15 +87,11 @@ def set_paper(year, month, day, paper_title):
             selected_paper = paper
             break
 
-    print(type(selected_paper['arxiv_id']))
-
     return (
         selected_paper['arxiv_id'],
         gr.Markdown(f"# {selected_paper['title']}"), 
         gr.Markdown(
-            "[![arXiv](https://img.shields.io/badge/arXiv-%s-b31b1b.svg?style=for-the-badge)](https://arxiv.org/abs/%s)" % (selected_paper['arxiv_id'], selected_paper['arxiv_id'])
-        ),
-        gr.Markdown(
+            "[![arXiv](https://img.shields.io/badge/arXiv-%s-b31b1b.svg?style=for-the-badge)](https://arxiv.org/abs/%s)" % (selected_paper['arxiv_id'], selected_paper['arxiv_id']) + " "
             "[![Paper page](https://huggingface.co/datasets/huggingface/badges/resolve/main/paper-page-lg.svg)](https://huggingface.co/papers/%s)" % selected_paper['arxiv_id']
         ),
         gr.Markdown(selected_paper["summary"]),
@@ -127,6 +128,8 @@ def set_paper(year, month, day, paper_title):
     )
 
 def set_date(title):
+    title = title.split("]")[1].strip()
+
     for _, (year, months) in enumerate(date_dict.items()):
         for _, (month, days) in enumerate(months.items()):
             for _, (day, papers) in enumerate(days.items()):
@@ -195,8 +198,10 @@ def add_arxiv_ids_to_queue(queue, arxiv_ids_str):
         valid_arxiv_ids = _filter_duplicate_arxiv_ids(valid_arxiv_ids)
 
         if len(valid_arxiv_ids) > 0:
-            valid_arxiv_ids = [[arxiv_id] for arxiv_id in valid_arxiv_ids]
-            gr.Warning(f"Processing on [{valid_arxiv_ids}]. Other requested arXiv IDs not found on this list should be already processed or being processed...")
+            papers = get_papers_from_arxiv_ids(valid_arxiv_ids)
+            valid_arxiv_ids = [[f"[{paper['paper']['id']}] {paper['title']}"] for paper in papers]
+
+            gr.Warning(f"Processing [{valid_arxiv_ids}]. Other requested arXiv IDs not found on this list should be already processed or being processed...")
             valid_arxiv_ids = pd.DataFrame({'Requested arXiv IDs': valid_arxiv_ids})
             queue = pd.concat([queue, valid_arxiv_ids])
             queue.reset_index(drop=True)
