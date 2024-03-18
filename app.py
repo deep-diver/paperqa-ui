@@ -396,7 +396,7 @@ scheduler.add_job(
     ],
     start_date=start_date
 )
-# scheduler.start()
+scheduler.start()
 
 demo.queue(
     default_concurrency_limit=20,
