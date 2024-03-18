@@ -19,6 +19,7 @@ from init import (
     requested_arxiv_ids_df,
     date_dict,
     arxivid2data,
+    dataset_repo_id,
     request_arxiv_repo_id,
     hf_token,
     gemini_api_key
@@ -156,8 +157,8 @@ def change_exp_type(exp_type):
         )
     
 def _filter_duplicate_arxiv_ids(arxiv_ids_to_be_added):
-    ds1 = datasets.load_dataset("chansung/requested-arxiv-ids-3")
-    ds2 = datasets.load_dataset("chansung/auto-paper-qa2")
+    ds1 = datasets.load_dataset(request_arxiv_repo_id)
+    ds2 = datasets.load_dataset(dataset_repo_id)
 
     unique_arxiv_ids = set()
 
@@ -165,9 +166,10 @@ def _filter_duplicate_arxiv_ids(arxiv_ids_to_be_added):
         arxiv_ids = d['Requested arXiv IDs']
         unique_arxiv_ids = set(list(unique_arxiv_ids) + arxiv_ids)
 
-    for d in ds2['train']:
-        arxiv_id = d['arxiv_id']
-        unique_arxiv_ids.add(arxiv_id)
+    if len(ds2) > 1:
+        for d in ds2['train']:
+            arxiv_id = d['arxiv_id']
+            unique_arxiv_ids.add(arxiv_id)
 
     return list(set(arxiv_ids_to_be_added) - unique_arxiv_ids)
 
@@ -262,8 +264,8 @@ async def chat_stream(idx, local_data, user_prompt, chat_state, ctx_num_lconv=3)
 
         yield "", ppm.build_uis(), str(ppm), gr.update(interactive=True), gr.update(interactive=True), gr.update(interactive=True)
     except Exception as e:
-        gr.Warning(str(e))
-        ppm.replace_last_pong("Gemini refused to answer. This happens becase there were some safety issues in the answer.")
+        print(str(e))
+        gr.Warning("Gemini refused to answer further. This happens because there were some safety issues in the answer.")
         yield "", ppm.build_uis(), str(ppm), gr.update(interactive=True), gr.update(interactive=True), gr.update(interactive=True)        
 
 def chat_reset(local_data, chat_state):

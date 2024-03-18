@@ -10,9 +10,9 @@ from gen.utils import parse_first_json_snippet
 
 def determine_model_name(given_image=None):
   if given_image is None:
-    return "gemini-pro"
+    return "gemini-1.0-pro"
   else:
-    return "gemini-pro-vision"
+    return "gemini-1.0-pro-vision"
 
 def construct_image_part(given_image):
   return {

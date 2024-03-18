@@ -74,8 +74,8 @@ def init(api_key):
 def _default_gen_text():
     return {
         "temperature": 0.9,
-        "top_p": 1,
-        "top_k": 1,
+        "top_p": 0.8,
+        "top_k": 32,
         "max_output_tokens": 2048,
     }
 
@@ -83,24 +83,24 @@ def _default_safety_settings():
     return [
         {
             "category": "HARM_CATEGORY_HARASSMENT",
-            "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+            "threshold": "BLOCK_NONE"
         },
         {
             "category": "HARM_CATEGORY_HATE_SPEECH",
-            "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+            "threshold": "BLOCK_NONE"
         },
         {
             "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-            "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+            "threshold": "BLOCK_NONE"
         },
         {
             "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
-            "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+            "threshold": "BLOCK_NONE"
         },
     ]
 
 async def _word_generator(sentence):
-    for word in sentence.split():
+    for word in sentence.split(" "):
         yield word
         delay = 0.03 + (len(word) * 0.005)
         await asyncio.sleep(delay)  # Simulate a short delay

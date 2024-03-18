@@ -2,10 +2,12 @@ import os
 import copy
 import datasets
 import pandas as pd
+from datasets import Dataset
 from collections import defaultdict
 
 from datetime import datetime, timedelta
 from background import process_arxiv_ids
+from utils import create_hf_hub
 from apscheduler.schedulers.background import BackgroundScheduler
 
 def _count_nans(row):
@@ -78,6 +80,19 @@ def initialize_data(source_data_repo_id, request_data_repo_id):
 def update_dataframe(request_data_repo_id):
     request_ds = datasets.load_dataset(request_data_repo_id)
     return _initialize_requested_arxiv_ids(request_ds)
+
+def initialize_repos(
+    source_data_repo_id, request_data_repo_id, hf_token
+):
+    if create_hf_hub(source_data_repo_id, hf_token) is False:
+        print(f"{source_data_repo_id} repository already exists")
+
+    if create_hf_hub(request_data_repo_id, hf_token) is False:
+        print(f"{request_data_repo_id} repository already exists")
+    else:
+        df = pd.DataFrame(data={"Requested arXiv IDs": [["top"]]})
+        ds = Dataset.from_df(df)
+        ds.push_to_hub(request_data_repo_id, token=hf_token)
 
 def get_secrets():
     global gemini_api_key
